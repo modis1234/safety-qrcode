@@ -20,11 +20,11 @@ const queryConfig = {
     return query;
   },
   findByLog() {
-    let query = `SELECT * FROM bridge_view;`;
+    let query = `SELECT * FROM rec_bridge_view;`;
     return query;
   },
   findByLogId() {
-    let query = `SELECT * FROM bridge_view WHERE bridge_seq=?;`;
+    let query = `SELECT * FROM rec_bridge_view WHERE bridge_seq=?;`;
     return query;
   },
   insertOfLog() {

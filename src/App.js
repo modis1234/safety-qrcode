@@ -1,12 +1,14 @@
-import React from "react";
-import Bridges from "./component/Bridges"
-import { BridgesProvider } from "./context/BridgesContext";
+import React from 'react';
+import { Route } from 'react-router-dom';
+import BridgeListPage from './pages/BridgeListPage';
+import BridgePage from './pages/BridgePage';
 
 function App() {
   return (
-    <BridgesProvider>
-      <Bridges />
-    </BridgesProvider>
+    <>
+      <Route path="/" component={BridgeListPage} exact={true} />
+      <Route path="/:id" component={BridgePage} />
+    </>
   );
 }
 
