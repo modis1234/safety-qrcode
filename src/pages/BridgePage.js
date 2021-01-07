@@ -8,4 +8,4 @@ const BridgePage = ({ match }) => {
     return <BridgeContainer bridgeId={bridgeId} />
 };
 
-export default BridgePage;
+export default BridgePage;  

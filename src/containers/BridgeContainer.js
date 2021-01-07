@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Bridge from "../components/Bridge";
-import { getBridge } from "../modules/bridges";
+import { clearBridge, getBridge } from "../modules/bridges";
 
 const BridgeContainer = ({ bridgeId }) => {
   const { data, loading, error } = useSelector((state) => state.bridges.bridge);
@@ -9,6 +9,9 @@ const BridgeContainer = ({ bridgeId }) => {
 
   useEffect(() => {
     dispatch(getBridge(bridgeId));
+    return ()=> {
+        dispatch(clearBridge())
+    }
   }, [bridgeId, dispatch]);
 
   if (loading) return <div>로딩중...</div>;
