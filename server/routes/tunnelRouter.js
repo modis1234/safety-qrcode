@@ -59,7 +59,7 @@ router.get("/tunnels/:id", (req, res) => {
             );
             return result;
           });
-          res.json(resResult);
+          res.json(resResult[0]);
         }
       });
     }

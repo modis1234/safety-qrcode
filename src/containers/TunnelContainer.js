@@ -1,27 +1,27 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Bridge from "../components/Bridge";
+import Tunnel from "../components/Tunnel";
 import { reducerUtils } from "../lib/asyncUtils";
-import { getBridge } from "../modules/bridges";
+import { getTunnel } from "../modules/tunnels";
 
-const BridgeContainer = ({ bridgeId }) => {
+const TunnelContainer = ({ tunnelId }) => {
   const { data, loading, error } = useSelector(
-    (state) => state.bridges.bridge[bridgeId] || reducerUtils.initial()
+    (state) => state.tunnels.tunnel[tunnelId] || reducerUtils.initial()
   );
   const dispatch = useDispatch();
 
   useEffect(() => {
     if (data) return;
-    dispatch(getBridge(bridgeId));
-    // eslint-disable-next-line
-  }, [bridgeId, dispatch]);
+    dispatch(getTunnel(tunnelId));
 
-  console.log(data);
+    // eslint-disable-next-line
+  }, [tunnelId, dispatch]);
+
   if (loading && !data) return <div>로딩중...</div>;
   if (error) return <div>에러 발생!</div>;
   if (!data) return null;
 
-  return <Bridge bridge={data} />;
+  return <Tunnel tunnel={data} />;
 };
 
-export default BridgeContainer;
+export default TunnelContainer;

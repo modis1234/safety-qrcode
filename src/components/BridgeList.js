@@ -6,7 +6,7 @@ const BridgeList = ({ bridges }) => {
     <ul>
       {bridges.map((bridge) => (
         <li key={bridge.id}>
-           <Link to={`/${bridge.id}`}>{bridge.bridge_nm} ({bridge.bridge_index})</Link>
+           <Link to={`/bridge/${bridge.id}`}>{bridge.bridge_nm} ({bridge.bridge_index})</Link>
         </li>
       ))}
     </ul>

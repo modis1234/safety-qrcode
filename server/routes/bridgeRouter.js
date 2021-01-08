@@ -42,7 +42,6 @@ router.get("/bridges/:id", (req, res) => {
   let { id } = req.params;
   console.log(id);
   let _query = queryConfig.findById();
-  console.log(_query);
   pool.getConnection((err, connection) => {
     if (err) {
       res.status(err.status).end();
@@ -59,7 +58,7 @@ router.get("/bridges/:id", (req, res) => {
             );
             return result;
           });
-          res.json(resResult);
+          res.json(resResult[0]);
         }
       });
     }

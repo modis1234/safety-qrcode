@@ -11,6 +11,7 @@ import { composeWithDevTools } from "redux-devtools-extension";
 import ReduxThunk from "redux-thunk";
 import { BrowserRouter } from "react-router-dom";
 
+
 const store = createStore(
   rootReducer,
   composeWithDevTools(applyMiddleware(ReduxThunk, logger))
