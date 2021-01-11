@@ -2,11 +2,16 @@ const express = require("express");
 const router = express.Router();
 const pool = require("./config/connectionPool");
 
-const queryConfig = require("./query/structureQuery");
+const queryConfig = require("./query/configQuery");
 
 const moment = require("moment");
 require("moment-timezone");
 moment.tz.setDefault("Asia/Seoul");
+
+const COMM_STRUCTURE = 'comm_structure';
+const INFO_STRUCTURE = 'info_structure';
+const REC_STRUCTURE_VIEW = 'rec_structure_view';
+const LOG_STRUCTURE = 'log_structure';
 
 let staCalc = (point) => {
   let _point = point.split("+");
@@ -18,7 +23,7 @@ let staCalc = (point) => {
 
 // 모든 구조물 조회(GET-SELECT)
 router.get("/structures", (req, res) => {
-  let _query = queryConfig.findByAll();
+  let _query = queryConfig.findByAll(COMM_STRUCTURE);
   pool.getConnection((err, connection) => {
     if (err) {
       res.status(err.status).end();
@@ -41,7 +46,7 @@ router.get("/structures", (req, res) => {
 router.get("/structures/:id", (req, res) => {
   let { id } = req.params;
   console.log(id);
-  let _query = queryConfig.findById();
+  let _query = queryConfig.findById(COMM_STRUCTURE, 'id');
   console.log(_query);
   pool.getConnection((err, connection) => {
     if (err) {
@@ -100,7 +105,7 @@ router.post("/structures", (req, res) => {
     code_index: codeIndex || null,
   };
 
-  let _query = queryConfig.insertOfInfo();
+  let _query = queryConfig.insert(INFO_STRUCTURE);
   pool.getConnection((err, connection) => {
     if (err) {
       res.status(err.status).end();
@@ -154,7 +159,7 @@ router.put("/structures/:id", (req, res) => {
   updateData[0] = data;
   updateData[1] = id;
 
-  let _query = queryConfig.updateOfInfo();
+  let _query = queryConfig.update(INFO_STRUCTURE, 'id');
   pool.getConnection((err, connection) => {
     if (err) {
       res.status(err.status).end();
@@ -177,7 +182,7 @@ router.put("/structures/:id", (req, res) => {
 router.delete("/structures/:id", (req, res) => {
   let { id } = req.params;
 
-  let _query = queryConfig.deleteOfInfo();
+  let _query = queryConfig.delete(INFO_STRUCTURE, 'id');
   pool.getConnection((err, connection) => {
     if (err) {
       res.status(err.status).end();
@@ -199,7 +204,7 @@ router.delete("/structures/:id", (req, res) => {
 
 // 구조물 관리이력 조회(GET-SELECT)
 router.get("/logs", (req, res) => {
-  let _query = queryConfig.findByLog();
+  let _query = queryConfig.findByAll(REC_STRUCTURE_VIEW);
   pool.getConnection((err, connection) => {
     if (err) {
       res.status(err.status).end();
@@ -227,7 +232,7 @@ router.get("/logs", (req, res) => {
 router.get("/logs/:id", (req, res) => {
   let { id } = req.params;
   console.log(id);
-  let _query = queryConfig.findByLogId();
+  let _query = queryConfig.findById(REC_STRUCTURE_VIEW, 'stt_seq');
   console.log(_query);
   pool.getConnection((err, connection) => {
     if (err) {
@@ -266,7 +271,7 @@ router.post("/logs", (req, res) => {
     safety_chk: safetyChk || null,
     description: description || null,
   };
-  let _query = queryConfig.insertOfLog();
+  let _query = queryConfig.insert(LOG_STRUCTURE);
   pool.getConnection((err, connection) => {
     if (err) {
       res.status(err.status).end();

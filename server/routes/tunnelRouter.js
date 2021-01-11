@@ -2,11 +2,18 @@ const express = require("express");
 const router = express.Router();
 const pool = require("./config/connectionPool");
 
-const queryConfig = require("./query/tunnelQuery");
+const queryConfig = require("./query/configQuery");
 
 const moment = require("moment");
 require("moment-timezone");
 moment.tz.setDefault("Asia/Seoul");
+
+
+const COMM_TUNNEL = 'comm_tunnel';
+const INFO_TUNNEL = 'info_tunnel';
+const REC_TUNNEL_VIEW = 'rec_tunnel_view';
+const LOG_TUNNEL = 'log_tunnel';
+
 
 let staCalc = (point) => {
   let _point = point.split("+");
@@ -18,7 +25,7 @@ let staCalc = (point) => {
 
 // 모든 터널 조회(GET-SELECT)
 router.get("/tunnels", (req, res) => {
-  let _query = queryConfig.findByAll();
+  let _query = queryConfig.findByAll(COMM_TUNNEL);
   pool.getConnection((err, connection) => {
     if (err) {
       res.status(err.status).end();
@@ -41,7 +48,7 @@ router.get("/tunnels", (req, res) => {
 router.get("/tunnels/:id", (req, res) => {
   let { id } = req.params;
   console.log(id);
-  let _query = queryConfig.findById();
+  let _query = queryConfig.findById(COMM_TUNNEL, 'id');
   console.log(_query);
   pool.getConnection((err, connection) => {
     if (err) {
@@ -103,7 +110,7 @@ router.post("/tunnels", (req, res) => {
   };
   console.log(data);
 
-  let _query = queryConfig.insertOfInfo();
+  let _query = queryConfig.insert(INFO_TUNNEL);
   pool.getConnection((err, connection) => {
     if (err) {
       res.status(err.status).end();
@@ -157,7 +164,7 @@ router.put("/tunnels/:id", (req, res) => {
   updateData[0] = data;
   updateData[1] = id;
 
-  let _query = queryConfig.updateOfInfo();
+  let _query = queryConfig.update(INFO_TUNNEL, 'id');
   pool.getConnection((err, connection) => {
     if (err) {
       res.status(err.status).end();
@@ -176,11 +183,11 @@ router.put("/tunnels/:id", (req, res) => {
   });
 });
 
-// 터널 정보 수정(UPDATE)
+// 터널 정보 삭제(DELETE)
 router.delete("/tunnels/:id", (req, res) => {
   let { id } = req.params;
 
-  let _query = queryConfig.deleteOfInfo();
+  let _query = queryConfig.delete(INFO_TUNNEL, 'id');
   pool.getConnection((err, connection) => {
     if (err) {
       res.status(err.status).end();
@@ -202,7 +209,7 @@ router.delete("/tunnels/:id", (req, res) => {
 
 // 터널 관리이력 조회(GET-SELECT)
 router.get("/logs", (req, res) => {
-  let _query = queryConfig.findByLog();
+  let _query = queryConfig.findByAll(REC_TUNNEL_VIEW);
   pool.getConnection((err, connection) => {
     if (err) {
       res.status(err.status).end();
@@ -230,7 +237,7 @@ router.get("/logs", (req, res) => {
 router.get("/logs/:id", (req, res) => {
   let { id } = req.params;
   console.log(id);
-  let _query = queryConfig.findByLogId();
+  let _query = queryConfig.findById(REC_TUNNEL_VIEW, 'tunnel_seq');
   console.log(_query);
   pool.getConnection((err, connection) => {
     if (err) {
@@ -269,7 +276,7 @@ router.post("/logs", (req, res) => {
     safety_chk: safetyChk || null,
     description: description || null,
   };
-  let _query = queryConfig.insertOfLog();
+  let _query = queryConfig.insert(LOG_TUNNEL);
   pool.getConnection((err, connection) => {
     if (err) {
       res.status(err.status).end();

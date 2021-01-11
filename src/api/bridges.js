@@ -11,3 +11,9 @@ export const getBridgeById = async (id) => {
   const response = await axios.get(`/bridge/bridges/${id}`);
   return response.data;
 };
+
+// 데이터 추가를 위한 POST 비동기 함수
+export const postBridge = async (data) => {
+  const response = await axios.post(`/bridge/bridges`, data);
+  return response.data;
+}

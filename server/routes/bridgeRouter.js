@@ -2,11 +2,18 @@ const express = require("express");
 const router = express.Router();
 const pool = require("./config/connectionPool");
 
-const queryConfig = require("./query/bridgeQuery");
+// const queryConfig = require("./query/bridgeQuery");
+const queryConfig = require("./query/configQuery");
 
 const moment = require("moment");
 require("moment-timezone");
 moment.tz.setDefault("Asia/Seoul");
+
+const COMM_BRIDGE = 'comm_bridge';
+const INFO_BRIDGE = 'info_bridge';
+const REC_BRIDGE_VIEW = 'rec_bridge_view';
+const LOG_BRIDGE = 'log_bridge';
+
 
 let staCalc = (point) => {
   let _point = point.split("+");
@@ -18,7 +25,8 @@ let staCalc = (point) => {
 
 // 모든 교량 조회(GET-SELECT)
 router.get("/bridges", (req, res) => {
-  let _query = queryConfig.findByAll();
+  // let _query = queryConfig.findByAll();
+  let _query = queryConfig.findByAll(COMM_BRIDGE);
   pool.getConnection((err, connection) => {
     if (err) {
       res.status(err.status).end();
@@ -41,7 +49,7 @@ router.get("/bridges", (req, res) => {
 router.get("/bridges/:id", (req, res) => {
   let { id } = req.params;
   console.log(id);
-  let _query = queryConfig.findById();
+  let _query = queryConfig.findById(COMM_BRIDGE, 'id');
   pool.getConnection((err, connection) => {
     if (err) {
       res.status(err.status).end();
@@ -99,7 +107,8 @@ router.post("/bridges", (req, res) => {
     code_index: codeIndex || null,
   };
 
-  let _query = queryConfig.insertOfInfo();
+  // let _query = queryConfig.insertOfInfo();
+  let _query = queryConfig.insert(INFO_BRIDGE);
   pool.getConnection((err, connection) => {
     if (err) {
       res.status(err.status).end();
@@ -153,7 +162,8 @@ router.put("/bridges/:id", (req, res) => {
   updateData[0] = data;
   updateData[1] = id;
 
-  let _query = queryConfig.updateOfInfo();
+  // let _query = queryConfig.updateOfInfo();
+  let _query = queryConfig.update(INFO_BRIDGE, 'id');
   pool.getConnection((err, connection) => {
     if (err) {
       res.status(err.status).end();
@@ -172,11 +182,13 @@ router.put("/bridges/:id", (req, res) => {
   });
 });
 
-// 교량 정보 수정(UPDATE)
+// 교량 정보 삭제(DELETE)
 router.delete("/bridges/:id", (req, res) => {
   let { id } = req.params;
 
-  let _query = queryConfig.deleteOfInfo();
+  // let _query = queryConfig.deleteOfInfo();
+  let _query = queryConfig.delete(INFO_BRIDGE, 'id');
+
   pool.getConnection((err, connection) => {
     if (err) {
       res.status(err.status).end();
@@ -198,7 +210,8 @@ router.delete("/bridges/:id", (req, res) => {
 
 // 교량 관리이력 조회(GET-SELECT)
 router.get("/logs", (req, res) => {
-  let _query = queryConfig.findByLog();
+  // let _query = queryConfig.findByLog();
+  let _query = queryConfig.findByAll(REC_BRIDGE_VIEW);
   pool.getConnection((err, connection) => {
     if (err) {
       res.status(err.status).end();
@@ -226,7 +239,8 @@ router.get("/logs", (req, res) => {
 router.get("/logs/:id", (req, res) => {
   let { id } = req.params;
   console.log(id);
-  let _query = queryConfig.findByLogId();
+  // let _query = queryConfig.findByLogId();
+  let _query = queryConfig.findById(REC_BRIDGE_VIEW, 'bridge_seq');
   console.log(_query);
   pool.getConnection((err, connection) => {
     if (err) {
@@ -265,7 +279,8 @@ router.post("/logs", (req, res) => {
     safety_chk: safetyChk || null,
     description: description || null,
   };
-  let _query = queryConfig.insertOfLog();
+  // let _query = queryConfig.insertOfLog();
+  let _query = queryConfig.insert(LOG_BRIDGE);
   pool.getConnection((err, connection) => {
     if (err) {
       res.status(err.status).end();

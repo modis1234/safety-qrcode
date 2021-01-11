@@ -2,16 +2,22 @@ const express = require("express");
 const router = express.Router();
 const pool = require("./config/connectionPool");
 
-const queryConfig = require("./query/equipmentQuery");
+const queryConfig = require("./query/configQuery");
 
 const moment = require("moment");
 require("moment-timezone");
 moment.tz.setDefault("Asia/Seoul");
 
+const COMM_EQUIPMENT = 'comm_equipment';
+const INFO_EQUIPMENT = 'info_equipment';
+const REC_EQUIPMENT_VIEW = 'rec_equipment_view';
+const LOG_EQUIPMENT = 'log_equipment';
+
 
 // 모든 장비 조회(GET-SELECT)
 router.get("/equips", (req, res) => {
-  let _query = queryConfig.findByAll();
+  let _query = queryConfig.findByAll(COMM_EQUIPMENT);
+
   pool.getConnection((err, connection) => {
     if (err) {
       res.status(err.status).end();
@@ -79,7 +85,7 @@ router.post("/equips", (req, res) => {
     code_index: codeIndex || null,
   };
 
-  let _query = queryConfig.insertOfInfo();
+  let _query = queryConfig.insert(INFO_EQUIPMENT);
   pool.getConnection((err, connection) => {
     if (err) {
       res.status(err.status).end();
@@ -103,7 +109,8 @@ router.post("/equips", (req, res) => {
 router.delete("/equips/:id", (req, res) => {
   let { id } = req.params;
 
-  let _query = queryConfig.deleteOfInfo();
+  let _query = queryConfig.delete(INFO_EQUIPMENT, 'id');
+
   pool.getConnection((err, connection) => {
     if (err) {
       res.status(err.status).end();
@@ -125,7 +132,8 @@ router.delete("/equips/:id", (req, res) => {
 
 // 장비 관리이력 조회(GET-SELECT)
 router.get("/logs", (req, res) => {
-  let _query = queryConfig.findByLog();
+  let _query = queryConfig.findByAll(REC_EQUIPMENT_VIEW);
+
   pool.getConnection((err, connection) => {
     if (err) {
       res.status(err.status).end();
@@ -153,7 +161,8 @@ router.get("/logs", (req, res) => {
 router.get("/logs/:id", (req, res) => {
   let { id } = req.params;
   console.log(id);
-  let _query = queryConfig.findByLogId();
+  // let _query = queryConfig.findByLogId();
+  let _query = queryConfig.findById(REC_EQUIPMENT_VIEW, 'equip_seq');
   console.log(_query);
   pool.getConnection((err, connection) => {
     if (err) {
@@ -192,7 +201,8 @@ router.post("/logs", (req, res) => {
     safety_chk: safetyChk || null,
     description: description || null,
   };
-  let _query = queryConfig.insertOfLog();
+  
+  let _query = queryConfig.insert(LOG_EQUIPMENT);
   pool.getConnection((err, connection) => {
     if (err) {
       res.status(err.status).end();
