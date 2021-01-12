@@ -40,7 +40,7 @@ router.get("/equips", (req, res) => {
 router.get("/equips/:id", (req, res) => {
   let { id } = req.params;
   console.log(id);
-  let _query = queryConfig.findById();
+  let _query = queryConfig.findById(COMM_EQUIPMENT);
   console.log(_query);
   pool.getConnection((err, connection) => {
     if (err) {

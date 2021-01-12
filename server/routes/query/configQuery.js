@@ -20,11 +20,11 @@ const queryConfig = {
     return query;
   },
   authLogin() {
-    let query = `SELECT id, COUNT(*) AS count, login_date, logout_date FROM tb_account WHERE phone_num=?;`;
+    let query = `SELECT id, COUNT(*) AS count, login_date, logout_date, name FROM tb_account WHERE phone_num=?;`;
     return query;
   },
   authLogout() {
-    let query = `UPDATE tb_account SET ? WHERE phone_num=?;`;
+    let query = `UPDATE tb_account SET ? WHERE id=?;`;
     return query;
   },
 };

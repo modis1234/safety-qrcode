@@ -157,7 +157,7 @@ router.post('/accounts/login', (req, res)=>{
   let {
    phoneNum
   } = req.body;
-
+  console.log(req.body)
   let _query = authLogin();
   console.log(_query)
   let data=[];
@@ -185,7 +185,7 @@ router.post('/accounts/login', (req, res)=>{
            }
            req.session[phoneNum] = successLogin;
            req.session.save(()=>{
-             res.json(successLogin);
+             res.send(successLogin);
            });
            console.log(req.session)
          } else {
@@ -205,16 +205,16 @@ router.post('/accounts/login', (req, res)=>{
 
 // 로그아웃
 router.post('/accounts/logout', (req, res) => {
-  let { phoneNum } = req.body;
+  let { id } = req.body;
 
-  console.log(phoneNum)
+  console.log(id)
   let date ={
     logout_date: moment().format("YYYY-MM-DD HH:mm:ss.SSS"),
     login_date: null
   };
   let updateData = [];
   updateData[0] = date;
-  updateData[1] = phoneNum; 
+  updateData[1] = id; 
   let _query = queryConfig.authLogout();
 
   pool.getConnection((err, connection) => {

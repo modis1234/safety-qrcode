@@ -14,6 +14,7 @@ const bridgeRouter = require('./routes/bridgeRouter');
 const tunnelRouter = require('./routes/tunnelRouter');
 const structureRouter = require('./routes/structureRouter');
 const equipmentRouter = require('./routes/equipmentRouter');
+const workerRouter = require('./routes/workerRouter');
 
 
 app.use(cors());
@@ -37,6 +38,7 @@ app.use('/bridge', bridgeRouter);
 app.use('/tunnel', tunnelRouter);
 app.use('/structure', structureRouter);
 app.use('/equip', equipmentRouter);
+app.use('/worker', workerRouter);
 
 app.listen(port, ()=>{
     console.log(`express in running on ${port}`);
